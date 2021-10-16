@@ -6,3 +6,5 @@ environment:
 dependencies:
   nyxx: ^2.0.5
   nyxx_interactions: ^2.0.2
+dev_dependencies:
+  flutter_lints: ^1.0.4
