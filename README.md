@@ -27,6 +27,32 @@ Nodd 2.0 is a new version of Official SCJ Discord Bot. Nodd bot is originally fo
 
 ## 開発者向け
 
+### 環境構築
+
+#### Visual Stuio Codeによる環境構築
+
+1. Visual Studio Codeを起動する。
+2. 拡張機能で[Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をインストールする。
+3. ステータスバーの左端にある![image](https://user-images.githubusercontent.com/18415838/137567497-f16c9ef4-ed2c-4f8e-bde4-d3d5f452787e.png)
+をクリックする。
+4. 「Reopen in Container」をクリックする。
+5. ターミナルを開いて以下を実行
+
+```bash
+export DISCORD_NODD_BOT_TOKEN=# discord bot token
+export DISCORD_NODD_GUILD_ID=# discord server ID
+```
+
+#### ターミナルによる環境構築
+
+```shell
+docker-compose up
+docker-compose exec app /bin/bash
+export DISCORD_NODD_BOT_TOKEN=# discord bot token
+export DISCORD_NODD_GUILD_ID=# discord server ID
+cd /workspace/
+```
+
 ### ナンバー制関係
 
 ナンバー制関係のプログラムのテストをするには以下のコマンドを用いる。
