@@ -25,11 +25,18 @@ bind：
 {el1,el2,el3}:bind>some
 some:unbind>{el1,el2,el3}
 
+詳細は ../docs/spec/lang.md
+
  */
 void main(List<String> args) {
   Map<String, String> envVars = Platform.environment;
   Nyxx bot = Nyxx(envVars["noddbottoken"], GatewayIntents.allUnprivileged);
-  String prefix= "/";
+  Map<String, String> prefixes = {
+    "sl": "/",
+    "ps": "%",
+    "dl": "$",
+  }:
+  String prefix= prefixes["sl"];
   bot.onReady.listen((ReadyEvent e) {
     print("Ready!");
     print("${envVars["noddbottoken"]}");
