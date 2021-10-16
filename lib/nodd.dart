@@ -64,22 +64,21 @@ void main(List<String> args) {
         }
       }))
     ..syncOnReady();
-  final prefixes = {
+  final Map<String,String> prefixes = {
     "sl": "/",
     "ps": "%",
     "dl": "\$",
   };
-  final prefix = prefixes["sl"];
-  if (prefix == null) {
-    throw Error();
-  }
+  final String prefix = prefixes["ps"];
+
   bot.onReady.listen((ReadyEvent e) {
     print("Ready!");
   });
   bot.onMessageReceived.listen((event) {
     String command_this = event.message.content.substring(prefix.length);
-    String prefix_this = event.message.content.substring(0, 1);
+    String prefix_this = event.message.content.substring(0, prefix.length);
     if (prefix_this == prefix) {
+      // コマンド実行(スラッシュコマンド以外)
       if (command_this.startsWith("quit") ||
           command_this.startsWith("exit") ||
           command_this.startsWith("kill")) {
@@ -92,7 +91,9 @@ void main(List<String> args) {
         event.message.channel
             .sendMessage(MessageBuilder.content("Pong: \n${command_this}"));
       }
-    } else {}
+    } else {
+      //コマンド以外のメッセージ
+    }
     print(event.message.content);
   });
 }
