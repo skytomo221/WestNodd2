@@ -80,17 +80,17 @@ void main(List<String> args) {
     String command_this = event.message.content.substring(prefix.length);
     String prefix_this = event.message.content.substring(0, 1);
     if (prefix_this == prefix) {
-      if (command_this.startsWith("/quit") ||
-          command_this.startsWith("/exit") ||
-          command_this.startsWith("/kill")) {
+      if (command_this.startsWith("quit") ||
+          command_this.startsWith("exit") ||
+          command_this.startsWith("kill")) {
         event.message.channel
             .sendMessage(MessageBuilder.content("Nodd System Shutdown."));
         print("Nodd System Shutdown.");
         sleep(Duration(seconds: 6));
         exit(0);
       } else {
-        event.message.channel.sendMessage(
-            MessageBuilder.content("Pong: \n${command_this.substring(1)}"));
+        event.message.channel
+            .sendMessage(MessageBuilder.content("Pong: \n${command_this}"));
       }
     } else {}
     print(event.message.content);
