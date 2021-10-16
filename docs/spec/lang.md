@@ -25,20 +25,27 @@
 - object << anything,
 - null << anything
 - number << object,
-- {x@number, y@number}:bind>frac << object,
+- frac << object: {x@number, y@number}:bind,
 - bool << object,
 - string << object,
 - regexp << object,
-- domain << object,
-- path << object,
+- domain << string,
+- path << string,
 - uri << object,
-- url << uri,
+- url << uri: {domain@domain, path@path}:bind,
 - userid << object,
 - twitterid << userid,
-- discordid << userid,
-- channelid << object,
-- guilid << object,
-- massageid << object,
+- discordid << userid: {name@string, id@number}:bind,
+- guildid << number,
+- channelid << number,
+- massageid << number,
+- massagelink << object: {massage@massageid, channel@channelid, guild@guildid, base@url=url("https://discord.com/channels/")}:bind,
+- invitelink << object: {id@string, base@url=url("https://discord.gg/")}:bind,
+- code << object: {ident@string}:bind,
+- isocode << code: {lang@string}:bind,
+- clacode << code,
+- function << object,
+- error << object,
 
 ### ジェネリクス型
 
@@ -50,15 +57,39 @@
 - result\[R,E],
 - maybe\[T]
 
-### bind
+### 梱束体 bind
+
+構造体(struct)のようなもの
 
 - {el1,el2,el3}:bind>some
 - some:unbind>{el1,el2,el3}
 
+### 特性体 spec
+
+両ストラクタ及びメソッド
+
 ## 組込コマンド
+
+inheriting:
 
 - neko
 - setnumber
 - getnumber
 - nick
-- rank
+
+Next New:
+
+- haishin broadcast settle
+- info server / project info
+- proi project manage
+- rule
+- poll voting support
+
+Feature:
+
+- rank communication ranking
+- code cla-code / csc-code plugin
+- migdal migdal plugin
+- wiki migdal-wiki plugin
+- lang con-lang info & search
+- trans translate
