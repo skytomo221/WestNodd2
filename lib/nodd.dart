@@ -1,5 +1,8 @@
 import "package:nyxx/nyxx.dart";
-import "dart:io" show Platform,exit,sleep;
+import "dart:io" show Platform, exit, sleep;
+
+import 'package:nyxx_interactions/interactions.dart';
+
 /**
 方針：コマンドは推論型付きマクロ言語となるように構成したい(理想/できれば)
 "@"　型注釈
@@ -29,33 +32,67 @@ some:unbind>{el1,el2,el3}
 
  */
 void main(List<String> args) {
-  Map<String, String> envVars = Platform.environment;
-  Nyxx bot = Nyxx(envVars["noddbottoken"], GatewayIntents.allUnprivileged);
-  Map<String, String> prefixes = {
+  final envVars = Platform.environment;
+  final token = envVars["DISCORD_NODD_BOT_TOKEN"];
+  if (token == null) {
+    throw Exception(
+        "Token is not difined. Please set `export DISCORD_NODD_BOT_TOKEN=<TOKEN>`");
+  }
+  final guildId = envVars["DISCORD_NODD_GUILD_ID"];
+  if (guildId == null) {
+    throw Exception(
+        "Guild ID is not difined. Please set `export DISCORD_NODD_GUILD_ID=<GUILD ID>`");
+  }
+  Nyxx bot = Nyxx(token, GatewayIntents.allUnprivileged);
+  Interactions(bot)
+    ..registerSlashCommand(SlashCommandBuilder(
+        "neko",
+        "Noddくんが生きているか判定します。",
+        [
+          CommandOptionBuilder(
+              CommandOptionType.string, "text", "Noddくんに言わせるセリフ",
+              required: false),
+        ],
+        guild: guildId.toSnowflake())
+      ..registerHandler((event) {
+        if (event.args.any((element) => element.name == "text")) {
+          final text = event.getArg("text").value.toString();
+          final catText = text.replaceAll("な", "にゃ");
+          event.respond(MessageBuilder.content("${catText}にゃ"));
+        } else {
+          event.respond(MessageBuilder.content("にゃーん"));
+        }
+      }))
+    ..syncOnReady();
+  final prefixes = {
     "sl": "/",
     "ps": "%",
-    "dl": "$",
-  }:
-  String prefix= prefixes["sl"];
+    "dl": "\$",
+  };
+  final prefix = prefixes["sl"];
+  if (prefix == null) {
+    throw Error();
+  }
   bot.onReady.listen((ReadyEvent e) {
     print("Ready!");
-    print("${envVars["noddbottoken"]}");
-    print("${envVars["nodddbtoken"]}");
   });
   bot.onMessageReceived.listen((event) {
     String command_this = event.message.content.substring(prefix.length);
-    String prefix_this = event.message.content.subString(0,1);
+    String prefix_this = event.message.content.substring(0, 1);
     if (prefix_this == prefix) {
-      if(command_this.startsWith("/quit")||command_this.startsWith("/exit")||command_this.startsWith("/kill")){
-        event.message.channel.sendMessage(MessageBuilder.content("Nodd System Shutdown."));
+      if (command_this.startsWith("/quit") ||
+          command_this.startsWith("/exit") ||
+          command_this.startsWith("/kill")) {
+        event.message.channel
+            .sendMessage(MessageBuilder.content("Nodd System Shutdown."));
         print("Nodd System Shutdown.");
         sleep(Duration(seconds: 6));
         exit(0);
-      }else{
-      event.message.channel.sendMessage(MessageBuilder.content("Pong: \n${command_this.substring(1)}"));
+      } else {
+        event.message.channel.sendMessage(
+            MessageBuilder.content("Pong: \n${command_this.substring(1)}"));
       }
-    }else{
-    }
+    } else {}
     print(event.message.content);
   });
 }
