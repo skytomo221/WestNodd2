@@ -210,7 +210,7 @@ void main(List<String> args) {
   bot.onReady.listen((ReadyEvent e) {
     print("Ready!");
   });
-  bot.onMessageReceived.listen((event) {
+  bot.onMessageReceived.listen((MessageReceivedEvent event) {
     String commandThis = event.message.content.substring(prefix.length);
     String prefixThis = event.message.content.substring(0, prefix.length);
     if (prefixThis == prefix) {
@@ -218,11 +218,16 @@ void main(List<String> args) {
       if (commandThis.startsWith("quit") ||
           commandThis.startsWith("exit") ||
           commandThis.startsWith("kill")) {
-        event.message.channel
+        IMessageAuthor at = event.message.author;
+        String tag = at.tag;
+        if(tag == "thd：佐藤陽花#7369" ||
+           tag == "skytomo#9913"){
+          event.message.channel
             .sendMessage(MessageBuilder.content("Nodd System Shutdown."));
-        print("Nodd System Shutdown.");
-        sleep(const Duration(seconds: 6));
-        exit(0);
+          print("Nodd System Shutdown.");
+          sleep(const Duration(seconds: 6));
+          exit(0);
+        }
       } else {
         event.message.channel
             .sendMessage(MessageBuilder.content("Pong: \n$commandThis"));
