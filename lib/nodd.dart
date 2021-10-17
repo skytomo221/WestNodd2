@@ -63,6 +63,30 @@ void main(List<String> args) {
           event.respond(MessageBuilder.content("にゃーん"));
         }
       }))
+    ..registerSlashCommand(SlashCommandBuilder(
+        "nick",
+        "ニックネームを変更します。",
+        [
+          CommandOptionBuilder(
+            CommandOptionType.string,
+            "raw_nick",
+            "新しいニックネーム",
+          ),
+        ],
+        guild: guildId.toSnowflake())
+      ..registerHandler((event) async {
+        final rawNick = event.getArg("raw_nick").value.toString();
+        if (RegExp(r'（Ｎｏ．[０-９]+）').hasMatch(rawNick)) {
+          event.respond(MessageBuilder.content("そのニックネームには変更できません。"));
+        } else {
+          final author = event.interaction.memberAuthor!;
+          final scjId =
+              RegExp(r'（Ｎｏ．[０-９]+）$').firstMatch(author.nickname!)!.group(0)!;
+          final newNick = rawNick + scjId;
+          await author.edit(nick: newNick);
+          event.respond(MessageBuilder.content("あなたのニックネームを $newNick に変更しました"));
+        }
+      }))
     ..syncOnReady();
   final Map<String,String> prefixes = {
     "sl": "/",
