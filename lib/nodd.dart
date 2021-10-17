@@ -58,7 +58,7 @@ void main(List<String> args) {
         if (event.args.any((element) => element.name == "text")) {
           final text = event.getArg("text").value.toString();
           final catText = text.replaceAll("な", "にゃ");
-          event.respond(MessageBuilder.content("${catText}にゃ"));
+          event.respond(MessageBuilder.content("$catTextにゃ"));
         } else {
           event.respond(MessageBuilder.content("にゃーん"));
         }
@@ -88,7 +88,7 @@ void main(List<String> args) {
         }
       }))
     ..syncOnReady();
-  final Map<String,String> prefixes = {
+  final Map<String, String> prefixes = {
     "sl": "/",
     "ps": "%",
     "dl": "\$",
@@ -99,21 +99,21 @@ void main(List<String> args) {
     print("Ready!");
   });
   bot.onMessageReceived.listen((event) {
-    String command_this = event.message.content.substring(prefix.length);
-    String prefix_this = event.message.content.substring(0, prefix.length);
-    if (prefix_this == prefix) {
+    String commandThis = event.message.content.substring(prefix.length);
+    String prefixThis = event.message.content.substring(0, prefix.length);
+    if (prefixThis == prefix) {
       // コマンド実行(スラッシュコマンド以外)
-      if (command_this.startsWith("quit") ||
-          command_this.startsWith("exit") ||
-          command_this.startsWith("kill")) {
+      if (commandThis.startsWith("quit") ||
+          commandThis.startsWith("exit") ||
+          commandThis.startsWith("kill")) {
         event.message.channel
             .sendMessage(MessageBuilder.content("Nodd System Shutdown."));
         print("Nodd System Shutdown.");
-        sleep(Duration(seconds: 6));
+        sleep(const Duration(seconds: 6));
         exit(0);
       } else {
         event.message.channel
-            .sendMessage(MessageBuilder.content("Pong: \n${command_this}"));
+            .sendMessage(MessageBuilder.content("Pong: \n$commandThis"));
       }
     } else {
       //コマンド以外のメッセージ
