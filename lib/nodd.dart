@@ -171,6 +171,7 @@ void main(List<String> args) {
           List<EmbedFieldBuilder> retChoices = choices.indexedMap((int index, String choice)=>EmbedFieldBuilder(index, choice)).toList();
           enbeds.fields = retChoices;
 
+          bool strict = false;
           if (event.args.any((InteractionOption element) => element.name == "only_mentioned")) {
             strict = bool.parse(event.getArg("only_mentioned").value.toString());
           }
