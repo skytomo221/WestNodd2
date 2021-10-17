@@ -228,6 +228,9 @@ void main(List<String> args) {
           print("Nodd System Shutdown.");
           sleep(const Duration(seconds: 6));
           exit(0);
+        }else{
+          event.message.channel
+            .sendMessage(MessageBuilder.content("Noddシステムをシャットダウンする権限がありません。"));
         }
       } else {
         event.message.channel
