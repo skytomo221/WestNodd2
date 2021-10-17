@@ -93,7 +93,7 @@ void main(List<String> args) {
     "ps": "%",
     "dl": "\$",
   };
-  final String prefix = prefixes["ps"];
+  final String prefix = prefixes["ps"]!;
 
   bot.onReady.listen((ReadyEvent e) {
     print("Ready!");
