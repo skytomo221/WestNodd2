@@ -60,6 +60,7 @@ class NickConverter implements StoredDataIO{
 class NickCtl{
   String oldSuffix = r"（Ｎｏ．[０-９]+）$";
   String newSuffix = r"#[0-9]{3}$";
+  String new2Suffix = r"#.{3}[0-9]{3}$";
   bool isValidNick(String nick)=>isOldStyleNick(nick)||isNewStyleNick(nick);
   bool isOldStyleNick(String nick)=>RegExp(this.oldSuffix).hasMatch(nick);
   bool isNewStyleNick(String nick)=>RegExp(this.newSuffix).hasMatch(nick);
@@ -94,11 +95,33 @@ class NickCtl{
 extension StringOpr on String{
   String get last=>this.split("").last;
 }
+class Tuple<F,L>{
+  F first;
+  L last;
+  Tuple(this.first,this.last);
+  @override
+  String toString(){
+    return [this.first.toString(),this.last.toString()].join("\t");
+  }
+}
+extension Prinyer<F,L> on List<Tuple<F,L>>{
+  @override
+  String toStr(){
+    return this.map((Tuple<F,L> tup)=>tup.toString()).join("\n");
+  }
+}
 class NumOnId{
   int id;
   NumOnId(this.id);
+  Tuple<int,String> both(){
+    print("id: ${this.id}");
+    print("hash: ${this.withHash()}");
+    print("han: ${this.withHan()}");
+    return Tuple<int,String>(this.withHash(),this.withHan());
+  }
   String _rawHan(int raw){
     List<String> rawData = File("./hanData.csv").readAsStringSync().split("\n").map((String elm)=>elm.last).toList();
+    print("rawdata(${rawData.length}): $rawData");
     if(raw < 0 || rawData.length <= raw){
       return "";
     }else{
