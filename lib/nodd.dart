@@ -86,6 +86,7 @@ void main(List<String> args) {
           await author.edit(nick: newNick);
           event.respond(MessageBuilder.content("あなたのニックネームを $newNick に変更しました"));
         }
+      /*
       ..registerSlashCommand(SlashCommandBuilder(
         "poll",
         "投票を開始します。",
@@ -198,8 +199,9 @@ void main(List<String> args) {
             enbeds.imageUrl = event.getArg("image").value.toString();
           }
           event.respond(MessageBuilder.enbed(enbeds));
-      }))
+      })) */
     ..syncOnReady();
+
   final Map<String, String> prefixes = {
     "sl": "/",
     "ps": "%",

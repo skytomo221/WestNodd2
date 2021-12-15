@@ -1,22 +1,110 @@
 import "dart:math";
+import "dart:io";
+import 'dart:typed_data';
 
-class NumGen {
+import 'package:pointycastle/pointycastle.dart';
+// ignore: implementation_imports
+import "package:pointycastle/src/utils.dart";
+
+import "package:nodd/libIO.dart";
+
+enum NumStyle{
+  invalid,
+  oldStyle,
+  newStyle
+}
+class NrSysComp{
+  String oldS;
+  String newS;
+  NrSysComp(this.oldS,this.newS);
+}
+
+class NickConverter implements StoredDataIO{
+  NickCtl nx = NickCtl();
+  List<NrSysComp> compTab = [];
+  NickConverter();
+  void loadOverHTTP(String url,WebAPIArch kind){}
+  void writeOverHTTP(String url,WebAPIArch kind){}
+  void loadFromLocal(String path){
+    String sourceTab = File(path).readAsStringSync();
+    List<String> tabList = sourceTab.split("\n");
+    List<NrSysComp> compTabTp = tabList.map<List<String>>((String l)=>l.split(":")).where((List<String> l)=>l.length==2).map<NrSysComp>((List<String> l)=>NrSysComp(l[0],l[1])).toList();
+    compTabTp.addAll(this.compTab);
+    this.compTab = compTabTp.toSet().toList();
+  }
+  void writeToLocal(String path){}
+  String toNew(String nickOld){
+    if(nx.isOldStyleNick(nickOld)){
+      return;
+    }else{
+      return nickOld;
+    }
+  }
+  String toOld(String nickNew){}
+}
+class NickCtl{
+  String oldSuffix = r"（Ｎｏ．[０-９]+）$";
+  String newSuffix = r"#[0-9]{3}$";
+  bool isValidNick(String nick)=>isOldStyleNick(nick)||isNewStyleNick(nick);
+  bool isOldStyleNick(String nick)=>RegExp(this.oldSuffix).hasMatch(nick);
+  bool isNewStyleNick(String nick)=>RegExp(this.newSuffix).hasMatch(nick);
+  NumStyle numStyleOfNick(String nick,[NumStyle mode = NumStyle.oldStyle]){
+    if(this.isValidNick(nick)){
+      if(mode == NumStyle.oldStyle){
+        if(this.isOldStyleNick(nick)){
+          return NumStyle.oldStyle;
+        }else{
+          return NumStyle.newStyle;
+        }
+      }else if(mode == NumStyle.newStyle){
+        if(this.isNewStyleNick(nick)){
+          return NumStyle.newStyle;
+        }else{
+          return NumStyle.oldStyle;
+        }
+      }else{
+        return NumStyle.invalid;
+      }
+    }else{
+      return NumStyle.invalid;
+    }
+    if(this.isNewStyleNick(nick)){
+      return NumStyle.newStyle;
+    }else if(this.isOldStyleNick(nick)){
+      return NumStyle.oldStyle;
+    }else{
+    }
+  }
+}
+class NumOnId{
+  int id;
+  NumOnId(this.id);
+  int withHash() {
+    Digest keccak = Digest("Keccak/128");
+    Uint8List chunk = Uint8List.fromList([this.id >> 24, this.id >> 16, this.id >> 8, this.id]);
+    keccak.update(chunk, 0, chunk.length);
+    Uint8List hash = Uint8List(keccak.digestSize);
+    keccak.doFinal(hash, 0);
+    return (decodeBigInt(hash) % BigInt.from(900)).toInt() + 100;
+  }
+}
+class NumGenRand {
   late int _radix;
   late List<String> _past;
   bool _deplet = false;
-  NumGen(int radix) {
+  NumGenRand(int radix) {
     _past = [];
     _radix = radix;
     isDepletSet;
   }
-  NumGen.init(int radix, int n) {
+  NumGenRand.init(int radix, int n) {
     _radix = radix;
-    _past = numgenForN(n, _radix);
+    _past = numgenRdForN(n, _radix);
     isDepletSet;
   }
   List<String> genForN(int n) {
     if (!isDeplet) {
-      List<String> ngfn = numgenForN_I(n, _radix, _past);
+      List<String> ngfn = numgenRdForN_I(n, _radix, _past);
       _past.addAll(ngfn);
       isDepletSet;
       return ngfn;
@@ -36,7 +124,7 @@ class NumGen {
   bool get isDeplet => _deplet;
   String get next {
     if (!isDeplet) {
-      String ng = numgen(_radix, _past);
+      String ng = numgenRd(_radix, _past);
       _past.add(ng);
       isDepletSet;
       return ng;
@@ -48,32 +136,32 @@ class NumGen {
   List<String> get past => _past;
 }
 
-List<String> numgenForN(int n, int radix) {
-  return numgenForN_I(n, radix, []);
+List<String> numgenRdForN(int n, int radix) {
+  return numgenRdForN_I(n, radix, []);
 }
 
 // ignore: non_constant_identifier_names
-List<String> numgenForN_I(int n, int radix, List<String> past) {
+List<String> numgenRdForN_I(int n, int radix, List<String> past) {
   if (n <= 0) {
     return past.reversed.toList();
   } else if ((n + past.length) > (pow(radix, 2).floor() * (radix + 1))) {
     //[1-radix][1-radix][0-radix]
     return past.reversed.toList()..add("@Deplet");
   } else {
-    String next = numgen(radix, past);
+    String next = numgenRd(radix, past);
     past.add(next);
-    return numgenForN_I(n - 1, radix, past);
+    return numgenRdForN_I(n - 1, radix, past);
   }
 }
 
-String numgen(int radix, List<String> past) {
+String numgenRd(int radix, List<String> past) {
   int len = 3;
   String ni = Random.secure()
       .nextInt((pow(radix, len) - 1).floor())
       .toRadixString(radix)
       .toUpperCase();
   if (ni.length != len || ni.startsWith("0") || past.contains(ni)) {
-    return numgen(radix, past);
+    return numgenRd(radix, past);
   } else {
     return ni;
   }

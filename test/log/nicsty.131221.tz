@@ -1,0 +1,42 @@
+【nickSampleOld】
+あづまにゃん（Ｎｏ．１）, りめすとり（Ｎｏ．２）, 多々井ゆかり（Ｎｏ．３）, skytomo（Ｎｏ．４）, Ziphineko（Ｎｏ．３０）
+, 佐藤陽花 Haruka Sato（Ｎｏ．６５）, にふ（Ｎｏ．２７）, Xirdim（Ｎｏ．６８）, るる（Ｎｏ．１８）, Acsitol（Ｎｏ．８１）
+, yuhr（Ｎｏ．３４）
+
+【nickSampleNew】
+, , , , 
+, , , , , 
+, 
+
+【nickSampleInvalid】
+がーねっと @自作言語, がーねっと#9502, thd：佐藤陽花#7369, Rhemestry#0111, Xirdim#9996
+, かつ２１/暁語たん
+
+【flashedWithOutInvalid】
+にふ（Ｎｏ．２７）, , , Xirdim（Ｎｏ．６８）, 多々井ゆかり（Ｎｏ．３）
+, , , , , Rhemestry#0111
+
+
+【flashedWithInvalid】
+, , skytomo（Ｎｏ．４）, Ziphineko（Ｎｏ．３０）, Xirdim（Ｎｏ．６８）
+, りめすとり（Ｎｏ．２）, Acsitol（Ｎｏ．８１）, , , るる（Ｎｏ．１８）
+
+
+【modeForOldWithOutInvalid】
+NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle
+, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid
+
+
+【modeForNewWithOutInvalid】
+NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle
+, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid
+
+
+【modeForOldWithInvalid】
+NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.oldStyle
+, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle
+
+
+【modeForNewWithInvalid】
+NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.oldStyle
+, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle

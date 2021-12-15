@@ -4,10 +4,11 @@ version: 2.0.0
 environment:
   sdk: ">=2.12.0 <3.0.0"
 dependencies:
-  nyxx: ^2.0.5
-  nyxx_interactions: ^2.0.2
-dev_dependencies:
-  dp_common_dart_linters:
-    git:
-      url: https://github.com/DevelopersPackages-org/dp_common_linters
-      path: Dart_Linters
+  nyxx: ^2.1.2
+  nyxx_interactions: ^2.0.3
+  pointycastle: ^3.4.0
+# dev_dependencies:
+#   dp_common_dart_linters:
+#     git:
+#       url: https://github.com/DevelopersPackages-org/dp_common_linters
+#       path: Dart_Linters
