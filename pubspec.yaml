@@ -7,6 +7,7 @@ dependencies:
   nyxx: ^2.1.2
   nyxx_interactions: ^2.0.3
   pointycastle: ^3.4.0
+  http: ^0.12.0
 # dev_dependencies:
 #   dp_common_dart_linters:
 #     git:
