@@ -1,3 +1,6 @@
+import "dart:io";
+import "package:http/http.dart" as http;
+
 enum WebAPIArch{
   raw, //生データ
   grpc,//gRPC/RPC
@@ -15,12 +18,13 @@ abstract class StoredDataIO{
   void loadFromLocal(String path);
   void writeToLocal(String path);
 }
-class GatewayHTTP{
+abstract class GatewayIO{}
+class GatewayHTTP extends GatewayIO{
   String url;
   WebAPIArch kind;
   GatewayHTTP(this.url,this.kind);
 }
-class GatewayLocal{
+class GatewayLocal extends GatewayIO{
   String path;
   GatewayLocal(this.path);
 }

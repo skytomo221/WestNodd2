@@ -1,5 +1,6 @@
 import "dart:math";
 import "dart:io";
+import "package:http/http.dart" as http;
 import 'dart:typed_data';
 
 import 'package:pointycastle/pointycastle.dart';
@@ -18,6 +19,14 @@ class NrSysComp{
   String newS;
   NrSysComp(this.oldS,this.newS);
 }
+extension SearchNr on List<NrSysComp>{
+  String getNew(String oldS){
+    return this.where((NrSysComp ncp)=>ncp.oldS==oldS).first.newS;
+  }
+  String getOld(String newS){
+    return this.where((NrSysComp ncp)=>ncp.newS==newS).first.oldS;
+  }
+}
 
 class NickConverter implements StoredDataIO{
   NickCtl nx = NickCtl();
@@ -35,12 +44,18 @@ class NickConverter implements StoredDataIO{
   void writeToLocal(String path){}
   String toNew(String nickOld){
     if(nx.isOldStyleNick(nickOld)){
-      return;
+      return compTab.getNew(nickOld);
     }else{
       return nickOld;
     }
   }
-  String toOld(String nickNew){}
+  String toOld(String nickNew){
+    if(nx.isNewStyleNick(nickNew)){
+      return compTab.getOld(nickNew);
+    }else{
+      return nickNew;
+    }
+  }
 }
 class NickCtl{
   String oldSuffix = r"（Ｎｏ．[０-９]+）$";
@@ -76,9 +91,29 @@ class NickCtl{
     }
   }
 }
+extension StringOpr on String{
+  String get last=>this.split("").last;
+}
 class NumOnId{
   int id;
   NumOnId(this.id);
+  String _rawHan(int raw){
+    List<String> rawData = File("./hanData.csv").readAsStringSync().split("\n").map((String elm)=>elm.last).toList();
+    if(raw < 0 || rawData.length <= raw){
+      return "";
+    }else{
+      return rawData[raw];
+    }
+  }
+  String _rawHans(List<int> raws){
+    return raws.map((int el)=>this._rawHan(el)).join("");
+  }
+  String withHan(){
+    int tmp1 = ((this.id % pow(10,8)).floor()/pow(633,2)).floor();
+    int tmp2 = ((this.id % pow(10,8)).floor()/633).floor() - tmp1*633;
+    int tmp3 = ((this.id % pow(10,8)).floor() % 633).floor();
+    return this._rawHans([tmp1,tmp2,tmp3]);
+  }
   int withHash() {
     Digest keccak = Digest("Keccak/128");
     Uint8List chunk = Uint8List.fromList([this.id >> 24, this.id >> 16, this.id >> 8, this.id]);

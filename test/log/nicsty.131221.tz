@@ -13,30 +13,30 @@
 , かつ２１/暁語たん
 
 【flashedWithOutInvalid】
-にふ（Ｎｏ．２７）, , , Xirdim（Ｎｏ．６８）, 多々井ゆかり（Ｎｏ．３）
-, , , , , Rhemestry#0111
+, skytomo（Ｎｏ．４）, 多々井ゆかり（Ｎｏ．３）, Xirdim#9996, 
+, かつ２１/暁語たん, 佐藤陽花 Haruka Sato（Ｎｏ．６５）, がーねっと @自作言語, りめすとり（Ｎｏ．２）, Rhemestry#0111
 
 
 【flashedWithInvalid】
-, , skytomo（Ｎｏ．４）, Ziphineko（Ｎｏ．３０）, Xirdim（Ｎｏ．６８）
-, りめすとり（Ｎｏ．２）, Acsitol（Ｎｏ．８１）, , , るる（Ｎｏ．１８）
+, Xirdim（Ｎｏ．６８）, Ziphineko（Ｎｏ．３０）, 佐藤陽花 Haruka Sato（Ｎｏ．６５）, 
+, , , , あづまにゃん（Ｎｏ．１）, 
 
 
 【modeForOldWithOutInvalid】
-NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle
-, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid
+NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid
+, NumStyle.invalid, NumStyle.oldStyle, NumStyle.invalid, NumStyle.oldStyle, NumStyle.invalid
 
 
 【modeForNewWithOutInvalid】
-NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle
-, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid
+NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid
+, NumStyle.invalid, NumStyle.oldStyle, NumStyle.invalid, NumStyle.oldStyle, NumStyle.invalid
 
 
 【modeForOldWithInvalid】
-NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.oldStyle
-, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle
+NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.invalid
+, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.invalid
 
 
 【modeForNewWithInvalid】
-NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.oldStyle
-, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle
+NumStyle.invalid, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.oldStyle, NumStyle.invalid
+, NumStyle.invalid, NumStyle.invalid, NumStyle.invalid, NumStyle.oldStyle, NumStyle.invalid
