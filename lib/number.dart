@@ -93,39 +93,66 @@ class NickCtl{
   }
 }
 extension StringOpr on String{
-  String get last=>this.split("").last;
+  String get last=>this.split(",").last;
 }
-class Tuple<F,L>{
+class Tuple<F,M,L>{
   F first;
+  M middle;
   L last;
-  Tuple(this.first,this.last);
+  Tuple(this.first,this.middle,this.last);
   @override
   String toString(){
-    return [this.first.toString(),this.last.toString()].join("\t");
+    return [this.first.toString(),this.middle.toString(),this.last.toString()].join(" : ");
   }
 }
-extension Prinyer<F,L> on List<Tuple<F,L>>{
+extension Prinyer<F,M,L> on List<Tuple<F,M,L>>{
   @override
   String toStr(){
-    return this.map((Tuple<F,L> tup)=>tup.toString()).join("\n");
+    return this.map((Tuple<F,M,L> tup)=>tup.toString()).join("\n");
+  }
+}
+String whatCodeForNL(String base){
+  if(base.contains("\r\n")){
+    print("CodeForNL is \\r\\n");
+    return "\r\n";
+  }else if(base.contains("\r")){
+    return "\r";
+    print("CodeForNL is \\n");
+  }else{
+    print("CodeForNL is \\n");
+    return "\n";
   }
 }
 class NumOnId{
   int id;
-  NumOnId(this.id);
-  Tuple<int,String> both(){
+  List<String> rawDataI = [];
+  NumOnId(this.id,[List<String>? rawData]){
+    if(rawData != null){
+      //print("\$\$NumOnID()");
+      this.rawDataI = rawData;
+      //print("#this.rawdata = arg(${this.rawDataI.length})");
+    }else{
+      //print("\$\$NumOnID.loadRawData()");
+      this.loadRawData();
+      //print("#./hanData.csv(${this.rawDataI.length}) was loaded");
+    }
+  }
+  void loadRawData(){
+    String rStr = File("./hanData.csv").readAsStringSync();
+    this.rawDataI = rStr.split(whatCodeForNL(rStr)).map((String elm)=>elm.last).toList();
+  }
+  Tuple<int,int,String> both(){
     print("id: ${this.id}");
     print("hash: ${this.withHash()}");
     print("han: ${this.withHan()}");
-    return Tuple<int,String>(this.withHash(),this.withHan());
+    return Tuple<int,int,String>(this.id,this.withHash(),this.withHan());
   }
   String _rawHan(int raw){
-    List<String> rawData = File("./hanData.csv").readAsStringSync().split("\n").map((String elm)=>elm.last).toList();
-    print("rawdata(${rawData.length}): $rawData");
-    if(raw < 0 || rawData.length <= raw){
-      return "";
+    //print("rawdata(${rawData.length}): $rawData");
+    if(raw < 0 || this.rawDataI.length <= raw){
+      return "??";
     }else{
-      return rawData[raw];
+      return this.rawDataI[raw];
     }
   }
   String _rawHans(List<int> raws){
@@ -135,6 +162,7 @@ class NumOnId{
     int tmp1 = ((this.id % pow(10,8)).floor()/pow(633,2)).floor();
     int tmp2 = ((this.id % pow(10,8)).floor()/633).floor() - tmp1*633;
     int tmp3 = ((this.id % pow(10,8)).floor() % 633).floor();
+    //print([tmp1,tmp2,tmp3]);
     return this._rawHans([tmp1,tmp2,tmp3]);
   }
   int withHash() {

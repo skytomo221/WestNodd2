@@ -6,6 +6,14 @@ import "package:nodd/libIO.dart";
 
 class NumGenFromID implements StoredDataIO{
   List<String> ids = [];
+  List<String> rawDataI = [];
+  void loadRawData(){
+    print("\$\$NumGenFromID.loadRawData()");
+    String rStr = File("./hanData.csv").readAsStringSync();
+    this.rawDataI = rStr.split(whatCodeForNL(rStr)).map((String elm)=>elm.last).toList();
+    File("rawDataI.tab").writeAsStringSync(this.rawDataI.join(", "));
+    print("#./hanData.csv(${this.rawDataI.length}) was loaded");
+  }
   void loadOverHTTP(String url,WebAPIArch kind){}
   void writeOverHTTP(String url,WebAPIArch kind){
 
@@ -28,9 +36,11 @@ class NumGenFromID implements StoredDataIO{
       return idN;
   }).where((int idN)=>idN>0).toList();
   void main(){
-    List<NumOnId> idns = this.idNr.map((int id)=>NumOnId(id)).toList();
-    List<Tuple<int,String>> wipes = idns.map((NumOnId idn)=>idn.both()).toList();
-    print(wipes.toStr());
+    this.loadRawData();
+    List<NumOnId> idns = this.idNr.map((int id)=>NumOnId(id,this.rawDataI)).toList();
+    List<Tuple<int,int,String>> wipes = idns.map((NumOnId idn)=>idn.both()).toList();
+    //print(wipes.toStr());
+    File("ansHashes.lst").writeAsStringSync(wipes.toStr());
   }
 }
 void main(){
