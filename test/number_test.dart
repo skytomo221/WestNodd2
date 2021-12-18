@@ -1,38 +1,47 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_peint
 
 import "package:nodd/number.dart";
+import 'package:intl/intl.dart';
 
+void log_init(){
+  needPrint = false;
+  DateTime now = DateTime.now();
+  DateFormat outputFormat = DateFormat('yyyyMMddHm');
+  dateStr = "numtest_"+ outputFormat.format(now);
+}
 void main() {
-  int n = 86;
+  log_init();
+  int n = 1000;
   int rad = 10;
-
-  print("SCJ-Number\n\n");
+  peint("\n[]from: test/number_test.dart");
+  peint("SCJ-Number\n\n");
   NumGenRand numgenRd = NumGenRand.init(rad, n);
-  print("now?: $n");
+  peint("now?: $n");
   List<String> now = numgenRd.past;
-  print(now.last.startsWith("@Deplet") ? "@Deplet" : now.join("\n"));
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
-  print("next: ${++n}");
-  print("\t" + numgenRd.next);
+  peint(now.last.startsWith("@Deplet") ? "@Deplet" : now.join("\n"));
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("next: ${++n}");
+  peint("\t" + numgenRd.next);
+  peint("& All program finished");
 }
