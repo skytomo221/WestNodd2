@@ -40,12 +40,12 @@ void main(List<String> args) {
   final String? token = envVars["DISCORD_NODD_BOT_TOKEN"];
   if (token == null) {
     throw Exception(
-        "Token is not difined. Please set `export DISCORD_NODD_BOT_TOKEN=<TOKEN>`");
+        "Token is not defined. Please set `export DISCORD_NODD_BOT_TOKEN=<TOKEN>`");
   }
   final String? guildId = envVars["DISCORD_NODD_GUILD_ID"];
   if (guildId == null) {
     throw Exception(
-        "Guild ID is not difined. Please set `export DISCORD_NODD_GUILD_ID=<GUILD ID>`");
+        "Guild ID is not defined. Please set `export DISCORD_NODD_GUILD_ID=<GUILD ID>`");
   }
   Nyxx bot = Nyxx(token, GatewayIntents.allUnprivileged);
   Interactions(bot)
