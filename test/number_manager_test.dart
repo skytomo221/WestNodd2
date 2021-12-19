@@ -1,3 +1,4 @@
+@Tags(['gsheets'])
 import 'dart:io';
 
 import 'package:nodd/number_manager.dart';
