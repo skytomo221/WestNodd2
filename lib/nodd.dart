@@ -41,7 +41,7 @@ void main(List<String> args) {
     throw Exception(
         "Client E-mail is not defined. Please set `export DISCORD_NODD_CLIENT_EMAIL=<CLIENT EMAIL>`");
   }
-  final String? clientId = envVars["DISCORD_NODD_CLIENT_EMAIL"];
+  final String? clientId = envVars["DISCORD_NODD_CLIENT_ID"];
   if (clientId == null) {
     throw Exception(
         "Client ID is not defined. Please set `export DISCORD_NODD_CLIENT_ID=<CLIENT ID>`");
