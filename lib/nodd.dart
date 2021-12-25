@@ -2,12 +2,14 @@
 // ignore: todo
 // TODO: Delete ignore_for_file
 
+import 'package:nodd/number_manager.dart';
 import "package:nyxx/nyxx.dart";
 import "dart:io" show Platform, exit, sleep;
 
 import 'package:nyxx_interactions/interactions.dart';
 
 void main(List<String> args) {
+  final scjNumberFormat = RegExp(r'#\d{4}$');
   final Map<String, String> envVars = Platform.environment;
   final String? token = envVars["DISCORD_NODD_BOT_TOKEN"];
   if (token == null) {
@@ -19,6 +21,57 @@ void main(List<String> args) {
     throw Exception(
         "Guild ID is not defined. Please set `export DISCORD_NODD_GUILD_ID=<GUILD ID>`");
   }
+  final String? projectId = envVars["DISCORD_NODD_PROJECT_ID"];
+  if (projectId == null) {
+    throw Exception(
+        "Project ID is not defined. Please set `export DISCORD_NODD_PROJECT_ID=<PROJECT ID>`");
+  }
+  final String? privateKeyId = envVars["DISCORD_NODD_PRIVATE_KEY_ID"];
+  if (privateKeyId == null) {
+    throw Exception(
+        "Private key ID is not defined. Please set `export DISCORD_NODD_PRIVATE_KEY_ID=<PRIVATE KEY ID>`");
+  }
+  final String? privateKey = envVars["DISCORD_NODD_PRIVATE_KEY"];
+  if (privateKey == null) {
+    throw Exception(
+        "Private key is not defined. Please set `export DISCORD_NODD_PRIVATE_KEY=<PRIVATE KEY>`");
+  }
+  final String? clientEmail = envVars["DISCORD_NODD_CLIENT_EMAIL"];
+  if (clientEmail == null) {
+    throw Exception(
+        "Client E-mail is not defined. Please set `export DISCORD_NODD_CLIENT_EMAIL=<CLIENT EMAIL>`");
+  }
+  final String? clientId = envVars["DISCORD_NODD_CLIENT_EMAIL"];
+  if (clientId == null) {
+    throw Exception(
+        "Client ID is not defined. Please set `export DISCORD_NODD_CLIENT_ID=<CLIENT ID>`");
+  }
+  final String? clientX509CertUrl =
+      envVars["DISCORD_NODD_CLIENT_X509_CERT_URL"];
+  if (clientX509CertUrl == null) {
+    throw Exception(
+        "The URL of the public x509 certificate is not defined. Please set `export DISCORD_NODD_CLIENT_X509_CERT_URL=<CLIENT X509 CERT URL>`");
+  }
+  final String? spreadsheetId = envVars["DISCORD_NODD_SPREADSHEET_ID"];
+  if (spreadsheetId == null) {
+    throw Exception(
+        "Spreadsheet ID is not defined. Please set `export DISCORD_NODD_SPREADSHEET_ID=<SPREADSHEET ID>`");
+  }
+  final credentials = '''
+{
+  "type": "service_account",
+  "project_id": "$projectId",
+  "private_key_id": "$privateKeyId",
+  "private_key": "$privateKey",
+  "client_email": "$clientEmail",
+  "client_id": "$clientId",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "$clientX509CertUrl"
+}
+''';
+  final numberManager = NumberManager(credentials, spreadsheetId);
   Nyxx bot = Nyxx(token, GatewayIntents.allUnprivileged);
   Interactions(bot)
     ..registerSlashCommand(SlashCommandBuilder(
@@ -44,24 +97,25 @@ void main(List<String> args) {
         "ニックネームを変更します。",
         [
           CommandOptionBuilder(
-            CommandOptionType.string,
-            "raw_nick",
-            "新しいニックネーム",
-          ),
+              CommandOptionType.string, "raw_nick", "新しいニックネーム",
+              required: true),
         ],
         guild: guildId.toSnowflake())
       ..registerHandler((event) async {
         final rawNick = event.getArg("raw_nick").value.toString();
-        if (RegExp(r'（Ｎｏ．[０-９]+）').hasMatch(rawNick)) {
-          event.respond(MessageBuilder.content("そのニックネームには変更できません。"));
-        } else {
-          final Member author = event.interaction.memberAuthor!;
-          final String scjId =
-              RegExp(r'（Ｎｏ．[０-９]+）$').firstMatch(author.nickname!)!.group(0)!;
-          final String newNick = rawNick + scjId;
-          await author.edit(nick: newNick);
-          event.respond(MessageBuilder.content("あなたのニックネームを $newNick に変更しました"));
+        if (rawNick.length > 27) {
+          event.respond(MessageBuilder.content(
+              "入力した文字列の長さは ${rawNick.length} ですが、ニックネームの最大文字数は27文字です。"));
+          return;
         }
+        final Member author = event.interaction.memberAuthor!;
+        final match = scjNumberFormat.firstMatch(author.nickname!);
+        final String scjId = (match == null)
+            ? '#${(await numberManager.register(event.interaction.memberAuthor!.id.id))}'
+            : match.group(0)!;
+        final String newNick = rawNick + scjId;
+        await author.edit(nick: newNick);
+        event.respond(MessageBuilder.content("あなたのニックネームを $newNick に変更しました"));
       }))
     ..registerSlashCommand(SlashCommandBuilder(
         "poll",
