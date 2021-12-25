@@ -2,6 +2,7 @@
 // ignore: todo
 // TODO: Delete ignore_for_file
 
+import 'package:nodd/number_manager.dart';
 import "package:nyxx/nyxx.dart";
 import "dart:io" show Platform, exit, sleep;
 
@@ -62,6 +63,36 @@ void main(List<String> args) {
           await author.edit(nick: newNick);
           event.respond(MessageBuilder.content("あなたのニックネームを $newNick に変更しました"));
         }
+      }))
+    ..registerSlashCommand(SlashCommandBuilder(
+        "number",
+        "SCJナンバーが登録されていなければ登録します。",
+        [
+          CommandOptionBuilder(
+              CommandOptionType.string, "user_id", "対象のユーザーのID",
+              required: true
+          ),
+        ],
+        guild: guildId.toSnowflake())
+      ..registerHandler((event) async {
+        final userId = event.getArg("user_id").value.toString();
+        final guild = await event.interaction.guild?.getOrDownload();
+        final member = await guild?.fetchMember(Snowflake(userId));
+        if (member == null) {
+          event.respond(MessageBuilder.content("そのIDに対応するメンバーは見つかりませんでした"));
+          return;
+        }
+        final user = await member.user.getOrDownload();
+        if (user.bot) return;
+        final nickname = (member.nickname ?? user.username)
+            .replaceAll(scjNumberFormat, '');
+        final match = scjNumberFormat.firstMatch(nickname);
+        final String scjId = (match == null)
+            ? '#${(await numberManager.register(member.id.id))}'
+            : match.group(0)!;
+        final String newNick = nickname + scjId;
+        await member.edit(nick: newNick);
+        event.respond(MessageBuilder.content("$nickname さんを $newNick に変更しました"));
       }))
     ..registerSlashCommand(SlashCommandBuilder(
         "poll",
