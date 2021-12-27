@@ -97,24 +97,25 @@ void main(List<String> args) {
         "ニックネームを変更します。",
         [
           CommandOptionBuilder(
-            CommandOptionType.string,
-            "raw_nick",
-            "新しいニックネーム",
-          ),
+              CommandOptionType.string, "raw_nick", "新しいニックネーム",
+              required: true),
         ],
         guild: guildId.toSnowflake())
       ..registerHandler((event) async {
         final rawNick = event.getArg("raw_nick").value.toString();
-        if (RegExp(r'（Ｎｏ．[０-９]+）').hasMatch(rawNick)) {
-          event.respond(MessageBuilder.content("そのニックネームには変更できません。"));
-        } else {
-          final Member author = event.interaction.memberAuthor!;
-          final String scjId =
-              RegExp(r'（Ｎｏ．[０-９]+）$').firstMatch(author.nickname!)!.group(0)!;
-          final String newNick = rawNick + scjId;
-          await author.edit(nick: newNick);
-          event.respond(MessageBuilder.content("あなたのニックネームを $newNick に変更しました"));
+        if (rawNick.length > 27) {
+          event.respond(MessageBuilder.content(
+              "入力した文字列の長さは ${rawNick.length} ですが、ニックネームの最大文字数は27文字です。"));
+          return;
         }
+        final Member author = event.interaction.memberAuthor!;
+        final match = scjNumberFormat.firstMatch(author.nickname!);
+        final String scjId = (match == null)
+            ? '#${(await numberManager.register(event.interaction.memberAuthor!.id.id))}'
+            : match.group(0)!;
+        final String newNick = rawNick + scjId;
+        await author.edit(nick: newNick);
+        event.respond(MessageBuilder.content("あなたのニックネームを $newNick に変更しました"));
       }))
     ..registerSlashCommand(SlashCommandBuilder(
         "number",
