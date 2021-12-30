@@ -1,4 +1,6 @@
 import "package:nodd/number.dart";
+import "package:nodd/nickstyler.dart";
+import "package:nodd/lib/logger.dart";
 import "dart:math";
 import "dart:io";
 
@@ -25,7 +27,7 @@ void main(){
   logger.put("modeForOldWithInvalid",LogList<String>(modeForOldWithInvalid.toIString()));
   List<NumStyle> modeForNewWithInvalid = flashedWithInvalid.map((String nick)=>nctl.numStyleOfNick(nick, NumStyle.newStyle)).toList();
   logger.put("modeForNewWithInvalid",LogList<String>(modeForNewWithInvalid.toIString()));
-  logger.fprint("./log/nicsty.131221.tz");
+  logger.fprint("./../log/nicsty.131221.tz");
 }
 class LogList<T>{
   List<T> ls;
@@ -33,20 +35,6 @@ class LogList<T>{
   LogList(this.ls);
   @override
   String toString()=>this.ls.indexedMap((int ind, T val)=>this.isNL(ind) ? val.toString() + "\n" : val.toString()).join(", ");
-}
-class Logger4L<T>{
-  String Function(String, String) captPlace = (String capt, String body)=>"【$capt】\n$body";
-
-  Map<String,T> log = {};
-  void put(String ind, T val)=>this.log.putIfAbsent(ind,()=>val);
-  @override
-  String toString()=>this.log.map((String ind, T val)=>MapEntry(ind,this.captPlace(ind,val.toString()))).values.join("\n\n");
-  void sprint(){
-    print(this.toString());
-  }
-  void fprint(String path){
-    File(path).writeAsStringSync(this.toString());
-  }
 }
 extension Flassher<T> on List<List<T>>{
   List<T> flash(int getNr){

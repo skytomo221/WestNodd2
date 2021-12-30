@@ -3,9 +3,13 @@ import "package:http/http.dart" as http;
 import 'package:intl/intl.dart';
 
 import "package:nodd/number.dart";
-import "package:nodd/libIO.dart";
+import "package:nodd/lib/io.dart";
+import "package:nodd/lib/logger.dart";
+import "package:nodd/lib/textformat.dart";
+import "package:nodd/lib/tuple.dart";
 class NumGenFromID implements StoredDataIO{
   List<String> ids = [];
+  List<String> names = [];
   List<String> rawDataI = [];
   NumGenFromID(){
     peint("\$ NumGenFromID()");
@@ -25,7 +29,12 @@ class NumGenFromID implements StoredDataIO{
   void loadFromLocal(String path){
     peint("\$ NumGenFromID.loadFromLocal($path)");
     if(path.endsWith(".tab")||path.endsWith(".lst")){
-      this.ids.addAll(File(path).readAsStringSync().split("\n"));
+      List<String> lines = File(path).readAsStringSync().split("\n");
+      lines.forEach((String line){
+        List<String> data = line.split(",");
+        this.ids.add(data.last);
+        this.names.add(data.first);
+      });
       peint("# $path(${this.ids.length}) was loaded");
     }
   }
@@ -46,9 +55,10 @@ class NumGenFromID implements StoredDataIO{
     List<NumOnId> idns = this.idNr.map((int id)=>NumOnId(id,this.rawDataI)).toList();
     peint("# List NumOnId Instance Created(${idns.length})");
     List<Tuple3<int,int,String>> wipes = idns.map((NumOnId idn)=>idn.both()).toList();
+    List<Tuple4<String,int,int,String>> wipes2 = wipes.withInHd<String>(this.names);
     //peint(wipes.toStr());
-    File("./../data/ansHashes.lst").writeAsStringSync(wipes.toStr());
-    peint("# ./../data/ansHashes.lst(wipes) was written");
+    File("./../data/ansHashes.tab").writeAsStringSync(wipes2.toStr(header: Tuple4<String,String,String,String>("Nick","ID","Hash3","Han3")));
+    peint("# ./../data/ansHashes.tab(wipes) was written");
 
   }
 }
@@ -63,7 +73,7 @@ void main(){
   peint("\n[]from: test/number_test2.dart");
   peint("\$ ~global.main()");
   NumGenFromID ngfi = NumGenFromID();
-  ngfi.loadFromLocal("./../data/idlist.lst");
+  ngfi.loadFromLocal("./../data/iduntable.tab");
   //peint(ngfi.idNr);
   ngfi.main();
   peint("& All program finished");
