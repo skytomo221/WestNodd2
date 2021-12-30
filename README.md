@@ -27,6 +27,49 @@ Nodd 2.0 is a new version of Official SCJ Discord Bot. Nodd bot is originally fo
 
 ## 開発者向け
 
+### 環境変数の設定
+
+#### Discordに関する環境変数の設定
+
+|環境変数名|設定値|
+|:-:|:-:|
+|`DISCORD_NODD_BOT_TOKEN`|アクセストークン|
+|`DISCORD_NODD_GUILD_ID`|スラッシュコマンドを使用するサーバーID|
+
+#### Google Sheets APIに関する環境変数の設定
+
+|環境変数名|設定値|
+|:-:|:-:|
+|`DISCORD_NODD_PROJECT_ID`|project_id|
+|`DISCORD_NODD_PRIVATE_KEY_ID`|private_key_id|
+|`DISCORD_NODD_PRIVATE_KEY`|private_key|
+|`DISCORD_NODD_CLIENT_EMAIL`|client_email|
+|`DISCORD_NODD_CLIENT_ID`|client_id|
+|`DISCORD_NODD_CLIENT_X509_CERT_URL`|client_x509_cert_url|
+|`DISCORD_NODD_SPREADSHEET_ID`|SCJ Numberを書き込み・読み込みするスプレッドシートのID|
+
+Google Cloud Platformからサービスアカウントキーを取得して以下のJSONファイルの値に当てはまるように環境変数を設定してください。
+
+```json
+{
+  "type": "service_account",
+  "project_id": "",
+  "private_key_id": "",
+  "private_key": "",
+  "client_email": "",
+  "client_id": "",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": ""
+}
+```
+
+`DISCORD_NODD_SPREADSHEET_ID`
+は
+`https://docs.google.com/spreadsheets/d/DISCORD_NODD_SPREADSHEET_ID/edit#gid=0`
+の部分に該当します。
+
 ### 環境構築
 
 #### Visual Stuio Codeによる環境構築
@@ -36,20 +79,15 @@ Nodd 2.0 is a new version of Official SCJ Discord Bot. Nodd bot is originally fo
 3. ステータスバーの左端にある![image](https://user-images.githubusercontent.com/18415838/137567497-f16c9ef4-ed2c-4f8e-bde4-d3d5f452787e.png)
 をクリックする。
 4. 「Reopen in Container」をクリックする。
-5. ターミナルを開いて以下を実行
-
-```bash
-export DISCORD_NODD_BOT_TOKEN=# discord bot token
-export DISCORD_NODD_GUILD_ID=# discord server ID
-```
+5. 環境変数の設定をする。
 
 #### ターミナルによる環境構築
+
+環境変数の設定をしてから、以下を実行する。
 
 ```shell
 docker-compose up
 docker-compose exec app /bin/bash
-export DISCORD_NODD_BOT_TOKEN=# discord bot token
-export DISCORD_NODD_GUILD_ID=# discord server ID
 cd /workspace/
 ```
 

@@ -9,6 +9,8 @@ dependencies:
   pointycastle: ^3.4.0
   http: ^0.13.3
   intl: ^0.17.0
+  gsheets: ^0.3.2
+
 # dev_dependencies:
 #   dp_common_dart_linters:
 #     git:
