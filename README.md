@@ -27,28 +27,30 @@ Nodd 2.0 is a new version of Official SCJ Discord Bot. Nodd bot is originally fo
 
 ## 開発者向け
 
+本番環境での稼働は LTS リリース(lts ブランチ)のソースを使用してください
+
 ### 環境変数の設定
 
-#### Discordに関する環境変数の設定
+#### Discord に関する環境変数の設定
 
-|環境変数名|設定値|
-|:-:|:-:|
-|`DISCORD_NODD_BOT_TOKEN`|アクセストークン|
-|`DISCORD_NODD_GUILD_ID`|スラッシュコマンドを使用するサーバーID|
+|        環境変数名        |                 設定値                  |
+| :----------------------: | :-------------------------------------: |
+| `DISCORD_NODD_BOT_TOKEN` |            アクセストークン             |
+| `DISCORD_NODD_GUILD_ID`  | スラッシュコマンドを使用するサーバー ID |
 
-#### Google Sheets APIに関する環境変数の設定
+#### Google Sheets API に関する環境変数の設定
 
-|環境変数名|設定値|
-|:-:|:-:|
-|`DISCORD_NODD_PROJECT_ID`|project_id|
-|`DISCORD_NODD_PRIVATE_KEY_ID`|private_key_id|
-|`DISCORD_NODD_PRIVATE_KEY`|private_key|
-|`DISCORD_NODD_CLIENT_EMAIL`|client_email|
-|`DISCORD_NODD_CLIENT_ID`|client_id|
-|`DISCORD_NODD_CLIENT_X509_CERT_URL`|client_x509_cert_url|
-|`DISCORD_NODD_SPREADSHEET_ID`|SCJ Numberを書き込み・読み込みするスプレッドシートのID|
+|             環境変数名              |                          設定値                          |
+| :---------------------------------: | :------------------------------------------------------: |
+|      `DISCORD_NODD_PROJECT_ID`      |                        project_id                        |
+|    `DISCORD_NODD_PRIVATE_KEY_ID`    |                      private_key_id                      |
+|     `DISCORD_NODD_PRIVATE_KEY`      |                       private_key                        |
+|     `DISCORD_NODD_CLIENT_EMAIL`     |                       client_email                       |
+|      `DISCORD_NODD_CLIENT_ID`       |                        client_id                         |
+| `DISCORD_NODD_CLIENT_X509_CERT_URL` |                   client_x509_cert_url                   |
+|    `DISCORD_NODD_SPREADSHEET_ID`    | SCJ Number を書き込み・読み込みするスプレッドシートの ID |
 
-Google Cloud Platformからサービスアカウントキーを取得して以下のJSONファイルの値に当てはまるように環境変数を設定してください。
+Google Cloud Platform からサービスアカウントキーを取得して以下の JSON ファイルの値に当てはまるように環境変数を設定してください。
 
 ```json
 {
@@ -72,12 +74,12 @@ Google Cloud Platformからサービスアカウントキーを取得して以�
 
 ### 環境構築
 
-#### Visual Stuio Codeによる環境構築
+#### Visual Stuio Code による環境構築
 
-1. Visual Studio Codeを起動する。
+1. Visual Studio Code を起動する。
 2. 拡張機能で[Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をインストールする。
 3. ステータスバーの左端にある![image](https://user-images.githubusercontent.com/18415838/137567497-f16c9ef4-ed2c-4f8e-bde4-d3d5f452787e.png)
-をクリックする。
+   をクリックする。
 4. 「Reopen in Container」をクリックする。
 5. 環境変数の設定をする。
 
