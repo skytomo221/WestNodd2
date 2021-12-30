@@ -1,2 +1,1 @@
-# TODO: Replace to package:dp_common_dart_linters/default.yaml
-include: package:lints/recommended.yaml
+# include: package:dp_common_dart_linters/default.yaml

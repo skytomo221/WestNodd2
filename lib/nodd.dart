@@ -108,6 +108,7 @@ void main(List<String> args) {
               "入力した文字列の長さは ${rawNick.length} ですが、ニックネームの最大文字数は27文字です。"));
           return;
         }
+
         final Member author = event.interaction.memberAuthor!;
         final match = scjNumberFormat.firstMatch(author.nickname!);
         final String scjId = (match == null)
@@ -271,6 +272,7 @@ void main(List<String> args) {
         event.respond(MessageBuilder.embed(enbeds));
       }))
     ..syncOnReady();
+
   final Map<String, String> prefixes = {
     "sl": "/",
     "ps": "%",

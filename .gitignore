@@ -40,3 +40,8 @@ doc/api/
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
+log/*.log
+log/*/*.log
+log/*/*/*.log
+log/*/*/*/*.log
+log/nicsty.131221.tz
