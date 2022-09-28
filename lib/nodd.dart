@@ -6,7 +6,7 @@ import 'package:nodd/number_manager.dart';
 import "package:nyxx/nyxx.dart";
 import "dart:io" show Platform, exit, sleep;
 
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 void main(List<String> args) {
   final scjNumberFormat = RegExp(r'#\d{4}$');
@@ -72,8 +72,15 @@ void main(List<String> args) {
 }
 ''';
   final numberManager = NumberManager(credentials, spreadsheetId);
-  Nyxx bot = Nyxx(token, GatewayIntents.allUnprivileged);
-  Interactions(bot)
+  final bot =
+      NyxxFactory.createNyxxWebsocket(token, GatewayIntents.allUnprivileged)
+        ..registerPlugin(Logging()) // Default logging plugin
+        ..registerPlugin(
+            CliIntegration()) // Cli integration for nyxx allows stopping application via SIGTERM and SIGKILl
+        ..registerPlugin(
+            IgnoreExceptions()) // Plugin that handles uncaught exceptions that may occur
+        ..connect();
+  IInteractions.create(WebsocketInteractionBackend(bot))
     ..registerSlashCommand(SlashCommandBuilder(
         "neko",
         "Noddくんが生きているか判定します。",
@@ -109,13 +116,13 @@ void main(List<String> args) {
           return;
         }
 
-        final Member author = event.interaction.memberAuthor!;
+        final IMember author = event.interaction.memberAuthor!;
         final match = scjNumberFormat.firstMatch(author.nickname!);
         final String scjId = (match == null)
             ? '#${(await numberManager.register(event.interaction.memberAuthor!.id.id))}'
             : match.group(0)!;
         final String newNick = rawNick + scjId;
-        await author.edit(nick: newNick);
+        await author.edit(builder: MemberBuilder()..nick = newNick);
         event.respond(MessageBuilder.content("あなたのニックネームを $newNick に変更しました"));
       }))
     ..registerSlashCommand(SlashCommandBuilder(
@@ -124,8 +131,7 @@ void main(List<String> args) {
         [
           CommandOptionBuilder(
               CommandOptionType.string, "user_id", "対象のユーザーのID",
-              required: true
-          ),
+              required: true),
         ],
         guild: guildId.toSnowflake())
       ..registerHandler((event) async {
@@ -138,138 +144,15 @@ void main(List<String> args) {
         }
         final user = await member.user.getOrDownload();
         if (user.bot) return;
-        final nickname = (member.nickname ?? user.username)
-            .replaceAll(scjNumberFormat, '');
+        final nickname =
+            (member.nickname ?? user.username).replaceAll(scjNumberFormat, '');
         final match = scjNumberFormat.firstMatch(nickname);
         final String scjId = (match == null)
             ? '#${(await numberManager.register(member.id.id))}'
             : match.group(0)!;
         final String newNick = nickname + scjId;
-        await member.edit(nick: newNick);
+        await member.edit(builder: MemberBuilder()..nick = newNick);
         event.respond(MessageBuilder.content("$nickname さんを $newNick に変更しました"));
-      }))
-    ..registerSlashCommand(SlashCommandBuilder(
-        "poll",
-        "投票を開始します。",
-        [
-          CommandOptionBuilder(CommandOptionType.string, "title", "投票のタイトル",
-              required: false),
-          CommandOptionBuilder(
-              CommandOptionType.role, "mention_r", "投票のためのメンション(ロール)",
-              required: false),
-          CommandOptionBuilder(
-              CommandOptionType.user, "mention_m", "投票のためのメンション(メンバ)",
-              required: false),
-          CommandOptionBuilder(CommandOptionType.boolean, "only_mentioned",
-              "投票可能な人をメンションした人に制限するかどうか",
-              required: false),
-          CommandOptionBuilder(CommandOptionType.string, "content", "投票の内容",
-              required: true),
-          CommandOptionBuilder(CommandOptionType.string, "image", "投票につける画像",
-              required: false),
-          CommandOptionBuilder(
-              CommandOptionType.integer, "vote_max", "投票可能な最大数(デフォルトは1)",
-              required: false),
-          CommandOptionBuilder(
-              CommandOptionType.subCommandGroup, "choice", "投票の選択肢",
-              options: [
-                CommandOptionBuilder(
-                    CommandOptionType.string, "choice_1", "選択肢1",
-                    required: true),
-                CommandOptionBuilder(
-                    CommandOptionType.string, "choice_2", "選択肢2",
-                    required: true),
-                CommandOptionBuilder(
-                    CommandOptionType.string, "choice_3", "選択肢3",
-                    required: false),
-                CommandOptionBuilder(
-                    CommandOptionType.string, "choice_4", "選択肢4",
-                    required: false),
-                CommandOptionBuilder(
-                    CommandOptionType.string, "choice_5", "選択肢5",
-                    required: false),
-                CommandOptionBuilder(
-                    CommandOptionType.string, "choice_6", "選択肢6",
-                    required: false),
-              ],
-              required: true),
-        ],
-        guild: guildId.toSnowflake())
-      ..registerHandler((SlashCommandInteractionEvent event) {
-        EmbedBuilder enbeds = EmbedBuilder();
-        late int maxVote;
-        if (event.args
-            .any((InteractionOption element) => element.name == "vote_max")) {
-          int temp = int.parse(event.getArg("vote_max").value.toString());
-          if (temp > 0 && temp <= 6) {
-            maxVote = temp;
-          } else {
-            maxVote = 1;
-          }
-        } else {
-          maxVote = 1;
-        }
-        List<String> choices = {} as List<String>;
-        int choiceNr = 2;
-        choices.add(event.getArg("choice_1").value.toString());
-        choices.add(event.getArg("choice_2").value.toString());
-        if (event.args
-            .any((InteractionOption element) => element.name == "choice_3")) {
-          choices.add(event.getArg("choice_3").value.toString());
-          choiceNr++;
-        }
-        if (event.args
-            .any((InteractionOption element) => element.name == "choice_4")) {
-          choices.add(event.getArg("choice_4").value.toString());
-          choiceNr++;
-        }
-        if (event.args
-            .any((InteractionOption element) => element.name == "choice_5")) {
-          choices.add(event.getArg("choice_5").value.toString());
-          choiceNr++;
-        }
-        if (event.args
-            .any((InteractionOption element) => element.name == "choice_6")) {
-          choices.add(event.getArg("choice_6").value.toString());
-          choiceNr++;
-        }
-        List<EmbedFieldBuilder> retChoices = choices
-            .indexedMap(
-                (int index, String choice) => EmbedFieldBuilder(index, choice))
-            .toList();
-        enbeds.fields = retChoices;
-
-        bool strict = false;
-        if (event.args.any(
-            (InteractionOption element) => element.name == "only_mentioned")) {
-          strict = event.getArg("only_mentioned") as bool;
-        }
-        String content = "";
-        if (event.args
-            .any((InteractionOption element) => element.name == "mention_r")) {
-          content += " ";
-          content += event.getArg("mention_r").value.toString();
-        }
-        if (event.args
-            .any((InteractionOption element) => element.name == "mention_m")) {
-          content += " ";
-          content += event.getArg("mention_m").value.toString();
-        }
-        if (content != "") {
-          content += "\n";
-        }
-        content += event.getArg("content").value.toString();
-        enbeds.description = content;
-        final Member author = event.interaction.memberAuthor!;
-        EmbedAuthorBuilder authorR = EmbedAuthorBuilder();
-        authorR.iconUrl = author.avatarURL()!;
-        authorR.name = author.nickname!;
-        enbeds.author = authorR;
-        if (event.args
-            .any((InteractionOption element) => element.name == "image")) {
-          enbeds.imageUrl = event.getArg("image").value.toString();
-        }
-        event.respond(MessageBuilder.embed(enbeds));
       }))
     ..syncOnReady();
 
